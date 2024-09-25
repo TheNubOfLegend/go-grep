@@ -10,18 +10,20 @@ func main() {
     if err != nil {
         fmt.Println("no file nerd")
     }
+    fmt.Printf("\n %d", len(file))
 
     var pattern []byte = []byte("at that")
     var lookup []int = make([]int, 256)
     for i := len(pattern) - 1; i >= 0; i-- {
         if lookup[pattern[i]] == 0 {
-            lookup[pattern[i]] = len(pattern) - 1 - i
+            //shift one less, made this way to avoid initing the entire array to max shift
+            lookup[pattern[i]] = len(pattern) - i
         }
     }
     for i := range lookup {
         if lookup[i] != 0 {
-            // fmt.Printf("%c", i)
-            // fmt.Println(lookup[i])
+            fmt.Printf("%c", i)
+            fmt.Println(lookup[i])
         }
     }
     offset := 0
@@ -31,30 +33,34 @@ func main() {
             delta := 0
             if file[i + offset] != pattern[i] {
                 if lookup[file[i]] != 0 {
-                    delta += lookup[file[i + offset]]
+                    delta += lookup[file[i + offset]] - 1
                 } else {
                     delta += len(pattern)
                 }
             } else {
                 if i == 0 {
                     delta += len(pattern)
-                    j := 0
-                    k := 0
-                    for j < 50 {
-                        if file[offset + j] == '\n' {
-                            break
-                        }
-                        j++
+                    for j := 0; j < len(pattern); j++ {
+                        fmt.Printf("%c", file[offset + j])
                     }
-                    for k > -50 {
-                        if file[offset + k] == '\n' {
-                            break
-                        }
-                        k--
-                    }
-                    for l := offset + k; l < offset + j; l++ {
-                        fmt.Printf("%c", file[offset + l])
-                    }
+                    // fmt.Println()
+                    // j := 0
+                    // k := 0
+                    // for j < 50 {
+                    //     if file[offset + j] == '\n' {
+                    //         break
+                    //     }
+                    //     j++
+                    // }
+                    // for k > -50 {
+                    //     if file[offset + k] == '\n' {
+                    //         break
+                    //     }
+                    //     k--
+                    // }
+                    // for l := offset + k; l < offset + j; l++ {
+                    //     fmt.Printf("%c", file[offset + l])
+                    // }
                     count++
                     fmt.Printf("\n%d found pattern at %d\n", count, offset)
                 }
@@ -65,6 +71,7 @@ func main() {
                 offset += delta
                 i = len(pattern) - 1
             }
+            // fmt.Println(offset)
         }
     }
 }

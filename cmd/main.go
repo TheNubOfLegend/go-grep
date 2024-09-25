@@ -6,11 +6,11 @@ import (
 )
 
 func main() {
-    file, err := os.ReadFile("test2")
+    file, err := os.ReadFile("test")
     if err != nil {
         fmt.Println("no file nerd")
     }
-    // fmt.Printf("\n %d", len(file))
+    // fmt.Printf("\n %d\n", len(file))
 
     var pattern []byte = []byte("at that")
     var lookup []int = make([]int, 256)
@@ -19,7 +19,7 @@ func main() {
     }
     for i := len(pattern) - 1; i >= 0; i-- {
         if lookup[pattern[i]] == len(pattern) {
-            lookup[pattern[i]] = len(pattern) - 1 - i
+            lookup[pattern[i]] = len(pattern) - i
         }
     }
     for i := range lookup {
@@ -28,52 +28,47 @@ func main() {
             fmt.Println(lookup[i])
         }
     }
-    offset := 0
+    offset := 72550
     count := 0
-    for offset < len(file) + len(pattern) {
-        for i := len(pattern) - 1; i >= 0 && i + offset < len(file); i-- {
+    for offset + len(pattern) < 72570 {
+        for i := len(pattern) - 1; i >= 0 && i + offset < 72600; i-- {
+            fmt.Printf("%c", file[i+offset])
             delta := 0
             if file[i + offset] != pattern[i] {
-                if lookup[file[i]] != len(pattern) {
-                    delta += lookup[file[i + offset]]
-                } else {
-                    delta += len(pattern)
-                }
-            } else {
-                if i == 0 {
-                    delta += len(pattern)
-                    for j := 0; j < len(pattern); j++ {
-                        fmt.Printf("%c", file[offset + j])
-                    }
-                    count++
-                    fmt.Printf("\n%d found pattern at %d\n", count, offset)
-                    // fmt.Println()
-                    // j := 0
-                    // k := 0
-                    // for j < 50 {
-                    //     if file[offset + j] == '\n' {
-                    //         break
-                    //     }
-                    //     j++
-                    // }
-                    // for k > -50 {
-                    //     if file[offset + k] == '\n' {
-                    //         break
-                    //     }
-                    //     k--
-                    // }
-                    // for l := offset + k; l < offset + j; l++ {
-                    //     fmt.Printf("%c", file[offset + l])
-                    // }
-                }
-                // fmt.Println(offset)
-                // fmt.Printf("%c\n", file[i + offset])
+                delta += lookup[file[i + offset]]
+            } else if i == 0 {
+                delta += len(pattern)
+                // for j := 0; j < len(pattern); j++ {
+                //     fmt.Printf("%c", file[offset + j])
+                // }
+                count++
+                fmt.Printf("\n%d found pattern at %d\n", count, offset)
+                // fmt.Println()
+                // j := 0
+                // k := 0
+                // for j < 50 {
+                //     if file[offset + j] == '\n' {
+                //         break
+                //     }
+                //     j++
+                // }
+                // for k > -50 {
+                //     if file[offset + k] == '\n' {
+                //         break
+                //     }
+                //     k--
+                // }
+                // for l := offset + k; l < offset + j; l++ {
+                //     fmt.Printf("%c", file[offset + l])
+                // }
             }
             if delta != 0 {
                 offset += delta
                 i = len(pattern) - 1
             }
             // fmt.Println(offset)
+            // fmt.Printf("%c\n", file[i + offset])
         }
+        // fmt.Println(offset)
     }
 }

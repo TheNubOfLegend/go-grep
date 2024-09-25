@@ -20,26 +20,34 @@ func main() {
     }
     for i := range lookup {
         if lookup[i] != 0 {
-            fmt.Printf("%c", i)
-            fmt.Println(lookup[i])
+            // fmt.Printf("%c", i)
+            // fmt.Println(lookup[i])
         }
     }
     offset := 0
-    for i := len(pattern) - 1; i >= 0; i-- {
-        delta := 0
-        if file[i + offset] != pattern[i] {
-            if lookup[file[i]] != 0 {
-                delta += lookup[file[i + offset]]
+    count := 0
+    for offset < len(file) + len(pattern) {
+        for i := len(pattern) - 1; i >= 0 && i + offset < len(file); i-- {
+            delta := 0
+            if file[i + offset] != pattern[i] {
+                if lookup[file[i]] != 0 {
+                    delta += lookup[file[i + offset]]
+                } else {
+                    delta += len(pattern)
+                }
             } else {
-                delta += len(pattern)
+                if i == 0 {
+                    count++
+                    fmt.Printf("%d found pattern at %d\n", count, offset)
+                }
+                // fmt.Println(offset)
+                // fmt.Printf("%c\n", file[i + offset])
             }
-        } else {
-            fmt.Println(offset)
-            fmt.Printf("%c\n", file[i + offset])
+            if delta != 0 {
+                offset += delta
+                i = len(pattern) - 1
+            }
         }
-        if delta != 0 {
-            offset += delta
-            i = len(pattern) - 1
-        }
+        offset += len(pattern)
     }
 }

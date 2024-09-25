@@ -37,8 +37,26 @@ func main() {
                 }
             } else {
                 if i == 0 {
+                    delta += len(pattern)
+                    j := 0
+                    k := 0
+                    for j < 50 {
+                        if file[offset + j] == '\n' {
+                            break
+                        }
+                        j++
+                    }
+                    for k > -50 {
+                        if file[offset + k] == '\n' {
+                            break
+                        }
+                        k--
+                    }
+                    for l := offset + k; l < offset + j; l++ {
+                        fmt.Printf("%c", file[offset + l])
+                    }
                     count++
-                    fmt.Printf("%d found pattern at %d\n", count, offset)
+                    fmt.Printf("\n%d found pattern at %d\n", count, offset)
                 }
                 // fmt.Println(offset)
                 // fmt.Printf("%c\n", file[i + offset])
@@ -48,6 +66,5 @@ func main() {
                 i = len(pattern) - 1
             }
         }
-        offset += len(pattern)
     }
 }

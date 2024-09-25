@@ -6,22 +6,24 @@ import (
 )
 
 func main() {
-    file, err := os.ReadFile("test")
+    file, err := os.ReadFile("test2")
     if err != nil {
         fmt.Println("no file nerd")
     }
-    fmt.Printf("\n %d", len(file))
+    // fmt.Printf("\n %d", len(file))
 
     var pattern []byte = []byte("at that")
     var lookup []int = make([]int, 256)
+    for i := range lookup {
+        lookup[i] = len(pattern)
+    }
     for i := len(pattern) - 1; i >= 0; i-- {
-        if lookup[pattern[i]] == 0 {
-            //shift one less, made this way to avoid initing the entire array to max shift
-            lookup[pattern[i]] = len(pattern) - i
+        if lookup[pattern[i]] == len(pattern) {
+            lookup[pattern[i]] = len(pattern) - 1 - i
         }
     }
     for i := range lookup {
-        if lookup[i] != 0 {
+        if lookup[i] != len(pattern) {
             fmt.Printf("%c", i)
             fmt.Println(lookup[i])
         }
@@ -32,8 +34,8 @@ func main() {
         for i := len(pattern) - 1; i >= 0 && i + offset < len(file); i-- {
             delta := 0
             if file[i + offset] != pattern[i] {
-                if lookup[file[i]] != 0 {
-                    delta += lookup[file[i + offset]] - 1
+                if lookup[file[i]] != len(pattern) {
+                    delta += lookup[file[i + offset]]
                 } else {
                     delta += len(pattern)
                 }
@@ -43,6 +45,8 @@ func main() {
                     for j := 0; j < len(pattern); j++ {
                         fmt.Printf("%c", file[offset + j])
                     }
+                    count++
+                    fmt.Printf("\n%d found pattern at %d\n", count, offset)
                     // fmt.Println()
                     // j := 0
                     // k := 0
@@ -61,8 +65,6 @@ func main() {
                     // for l := offset + k; l < offset + j; l++ {
                     //     fmt.Printf("%c", file[offset + l])
                     // }
-                    count++
-                    fmt.Printf("\n%d found pattern at %d\n", count, offset)
                 }
                 // fmt.Println(offset)
                 // fmt.Printf("%c\n", file[i + offset])
